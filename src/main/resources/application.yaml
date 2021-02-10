@@ -1,0 +1,49 @@
+# Server
+server:
+  port: 8080
+
+# Spring
+spring:
+  application:
+    name: Web Demo
+  profiles:
+    active: prod
+
+# Logging
+logging:
+  level:
+    root: INFO
+    org.springframework.boot: INFO
+
+# Mail
+mail:
+  hostname: host@gmail.com
+  port: 443
+  from: mailer@gmail.com
+
+---
+
+spring:
+  profiles:
+    active: dev
+# Server
+server:
+  port: 8081
+
+---
+
+spring:
+  profiles:
+    active: uat
+# Server
+server:
+  port: 8082
+
+---
+
+spring:
+  profiles:
+    active: prod
+# Server
+server:
+  port: 8082
