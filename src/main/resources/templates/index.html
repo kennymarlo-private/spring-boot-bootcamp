@@ -12,7 +12,7 @@
 <!-- Navigation -->
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark static-top">
     <div class="container">
-        <a class="navbar-brand" href="/">Thymeleaf - Bootstrap Toggle</a>
+        <a class="navbar-brand" href="/">Thymeleaf - Bootstrap</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"
                 aria-controls="navbarResponsive"
                 aria-expanded="false" aria-label="Toggle navigation">
@@ -22,26 +22,69 @@
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item active">
                     <a class="nav-link" href="#">Home
-                        <span class="sr-only">(current)</span>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">About</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Services</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Contact</a>
+                    <a class="nav-link" href="/employee">Employee List</a>
                 </li>
             </ul>
         </div>
     </div>
 </nav>
 
-<div class="container">
-
-
+<div class="container p-5">
+    <form method="post" th:object="${employee}">
+        <div class="form-row">
+            <div class="form-group col-md-4">
+                <label for="firstName">First Name</label>
+                <input type="text" class="form-control" id="firstName" th:field="*{firstName}">
+            </div>
+            <div class="form-group col-md-4">
+                <label for="middleName">Middle Name</label>
+                <input type="text" class="form-control" id="middleName" th:field="*{middleName}">
+            </div>
+            <div class="form-group col-md-4">
+                <label for="lastName">Last Name</label>
+                <input type="text" class="form-control" id="lastName" th:field="*{lastName}">
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-4">
+                <label for="employeeId">Employee ID</label>
+                <input type="text" class="form-control" id="employeeId" th:field="*{employeeId}">
+            </div>
+            <div class="form-group col-md-4">
+                <label for="position">Position</label>
+                <select id="position" class="form-control" th:field="*{position}">
+                    <option th:each="position : ${T(com.bootcamp.springboot.model.Position).values()}"
+                    th:value="${position}" th:text="${position.value}" ></option>
+                </select>
+            </div>
+            <div class="form-group col-md-4">
+                <label for="birthday">Birthday</label>
+                <input type="date" class="form-control" id="birthday" th:field="*{birthDay}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="street">Street</label>
+            <input type="text" class="form-control" id="street" th:field="*{street}">
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-4">
+                <label for="barangay">Barangay</label>
+                <input type="text" class="form-control" id="barangay" th:field="*{barangay}">
+            </div>
+            <div class="form-group col-md-4">
+                <label for="city">City</label>
+                <input type="text" class="form-control" id="city" th:field="*{city}">
+            </div>
+            <div class="form-group col-md-4">
+                <label for="zipCode">Zip Code</label>
+                <input type="number" class="form-control" id="zipCode" th:field="*{zipCode}">
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Save</button>
+    </form>
 </div>
 
 <script th:src="@{/webjars/jquery/jquery.min.js}"></script>

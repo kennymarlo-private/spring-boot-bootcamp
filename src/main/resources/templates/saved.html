@@ -4,6 +4,7 @@
     <meta charset="UTF-8"/>
     <title>Bootstrap Toggle</title>
 
+    <link th:rel="stylesheet" href="https://cdn.datatables.net/1.10.23/css/jquery.dataTables.min.css"/>
     <link th:rel="stylesheet" th:href="@{webjars/bootstrap/4.0.0-2/css/bootstrap.min.css} "/>
 </head>
 <body>
@@ -11,7 +12,7 @@
 <!-- Navigation -->
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark static-top">
     <div class="container">
-        <a class="navbar-brand" href="/">Thymeleaf - Bootstrap Toggle</a>
+        <a class="navbar-brand" href="/">Thymeleaf - Bootstrap</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"
                 aria-controls="navbarResponsive"
                 aria-expanded="false" aria-label="Toggle navigation">
@@ -19,51 +20,69 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarResponsive">
             <ul class="navbar-nav ml-auto">
-                <li class="nav-item active">
-                    <a class="nav-link" href="#">Home
-                        <span class="sr-only">(current)</span>
+                <li class="nav-item">
+                    <a class="nav-link" href="/">Home
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">About</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Services</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Contact</a>
+                <li class="nav-item active">
+                    <a class="nav-link" href="/employee">Employee List</a>
                 </li>
             </ul>
         </div>
     </div>
 </nav>
-
 <div class="container">
     <div class="row">
-        <div class="col-md-4">
-            <h2 class="mt-5 mb-4">Submitted settings</h2>
-
-            <fieldset th:each="group, groupStat : ${settings.groupList}">
-                <h2 th:text="${group.group}">Group</h2>
-
-                <th:block th:each="setting, settingStat : ${group.settingList}">
-                    <div class="row form-group">
-                        <div class="col-sm-8">
-                            <label th:text="${setting.label}">Label</label>
-                        </div>
-                        <div class="col-sm-4">
-                            <strong th:class="${setting.value ? 'badge badge-success' : 'badge badge-secondary'}"
-                                    th:text="${setting.value ? 'TRUE' : 'FALSE'}"></strong>
-                        </div>
-                    </div>
-
-                </th:block>
-            </fieldset>
-
-            <a th:href="@{/}" class="btn btn-primary">Go back</a>
+        <div class="mt-5 mb-5">
+            <table id="example" class="table table-bordered table-responsive" style="width: 100%">
+                <thead class="thead-dark">
+                <tr>
+                    <th>First Name</th>
+                    <th>Middle Name</th>
+                    <th>Last Name</th>
+                    <th>Employee ID</th>
+                    <th>Birth Day</th>
+                    <th>Position</th>
+                    <th>Street</th>
+                    <th>Barangay</th>
+                    <th>City</th>
+                    <th>Zip Code</th>
+                </tr>
+                </thead>
+            </table>
         </div>
     </div>
 </div>
+
+<script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+<script th:src="@{/webjars/popper.js/umd/popper.min.js}"></script>
+<script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+<script src="https://cdn.datatables.net/1.10.23/js/jquery.dataTables.min.js"></script>
+
+<script>
+
+    $('#example').DataTable( {
+        ajax: {
+            url: '/employee/rest',
+            dataSrc: ''
+        },
+        columns: [
+            { data: "firstName" },
+            { data: "middleName" },
+            { data: "lastName" },
+            { data: "employeeId" },
+            { data: "birthDay" },
+            { data: "position" },
+            { data: "street" },
+            { data: "barangay" },
+            { data: "city" },
+            { data: "zipCode" }
+        ]
+    } );
+
+
+
+</script>
 
 </body>
 </html>
