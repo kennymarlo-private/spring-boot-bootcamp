@@ -1,5 +1,7 @@
 package com.bootcamp.springboot.model;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import javax.persistence.*;
 import java.time.LocalDate;
 
@@ -13,6 +15,7 @@ public class Employee {
     @Column(name = "employee_id")
     private Long employeeId;
 
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate birthDay;
 
     @Enumerated(EnumType.STRING)
@@ -139,5 +142,22 @@ public class Employee {
 
     public void setZipCode(int zipCode) {
         this.zipCode = zipCode;
+    }
+
+    @Override
+    public String toString() {
+        return "Employee{" +
+                "id=" + id +
+                ", employeeId=" + employeeId +
+                ", birthDay=" + birthDay +
+                ", position=" + position +
+                ", firstName='" + firstName + '\'' +
+                ", middleName='" + middleName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", street='" + street + '\'' +
+                ", barangay='" + barangay + '\'' +
+                ", city='" + city + '\'' +
+                ", zipCode=" + zipCode +
+                '}';
     }
 }
