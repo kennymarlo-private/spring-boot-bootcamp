@@ -1,7 +1,6 @@
 package com.bootcamp.springboot.controller;
 
-import com.bootcamp.springboot.model.Settings;
-import com.bootcamp.springboot.service.SettingsService;
+import com.bootcamp.springboot.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,22 +12,20 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping({"/", "/index"})
 public class IndexController {
 
-    private SettingsService settingsService;
+    private EmployeeService employeeService;
 
     @Autowired
-    private IndexController(SettingsService settingsService) {
-        this.settingsService = settingsService;
+    private IndexController(EmployeeService employeeService) {
+        this.employeeService = employeeService;
     }
 
     @GetMapping
     public String main(Model model) {
-        model.addAttribute("settings", settingsService.defaultUserProfileSettings());
         return "index";
     }
 
     @PostMapping
-    public String save(Settings settings, Model model) {
-        model.addAttribute("settings", settings);
+    public String save(Model model) {
         return "saved";
     }
 }

@@ -7,7 +7,27 @@ spring:
   application:
     name: Web Demo
   profiles:
-    active: prod
+    active: dev
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    url: jdbc:mariadb://localhost:3306/bootcamp
+    username: root
+    password: admin
+    hikari:
+      minimum-idle: 1
+      maximum-pool-size: 10
+      pool-name: collectionPool
+      auto-commit: false
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: create-drop
+      naming:
+        physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
+        implicit-strategy: org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MariaDBDialect
 
 # Logging
 logging:
@@ -15,35 +35,3 @@ logging:
     root: INFO
     org.springframework.boot: INFO
 
-# Mail
-mail:
-  hostname: host@gmail.com
-  port: 443
-  from: mailer@gmail.com
-
----
-
-spring:
-  profiles:
-    active: dev
-# Server
-server:
-  port: 8081
-
----
-
-spring:
-  profiles:
-    active: uat
-# Server
-server:
-  port: 8082
-
----
-
-spring:
-  profiles:
-    active: prod
-# Server
-server:
-  port: 8082
