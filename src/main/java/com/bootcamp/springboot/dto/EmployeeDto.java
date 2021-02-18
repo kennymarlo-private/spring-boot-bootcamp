@@ -1,40 +1,36 @@
-package com.bootcamp.springboot.model;
+package com.bootcamp.springboot.dto;
 
+import com.bootcamp.springboot.model.Position;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.lang.NonNull;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
-@Entity
-@NamedQuery(
-        name = "Employee.findByFirstName",
-        query = "select e from Employee e where e.firstName = :firstName and e.lastName = :lastName"
-)
-public class Employee {
+public class EmployeeDto {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
-
-    @Column(name = "employee_id")
-    @NonNull
+    @NotNull
     private Long employeeId;
 
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+    @NotNull
     private LocalDate birthDay;
 
-    @Enumerated(EnumType.STRING)
+    @NotNull
     private Position position;
 
-    @Column(name = "first_name", length = 50)
+    @NotNull
+    @NotBlank(message = "First Name is required")
     private String firstName;
 
-    @Column(name = "middle_name", length = 50)
+    @NotNull
+    @NotBlank(message = "Middle Name is required")
     private String middleName;
 
-    @Column(name = "last_name", length = 50)
+    @NotNull
+    @NotBlank(message = "Last Name is required")
     private String lastName;
 
     private String street;
@@ -43,14 +39,12 @@ public class Employee {
 
     private String city;
 
-    @Column(name = "zip_code")
     private int zipCode;
 
-    public Employee() {
+    public EmployeeDto() {
     }
 
-    public Employee(Long id, Long employeeId, LocalDate birthDay, Position position, String firstName, String middleName, String lastName, String street, String barangay, String city, int zipCode) {
-        this.id = id;
+    public EmployeeDto(Long employeeId, LocalDate birthDay, Position position, String firstName, String middleName, String lastName, String street, String barangay, String city, int zipCode) {
         this.employeeId = employeeId;
         this.birthDay = birthDay;
         this.position = position;
@@ -61,14 +55,6 @@ public class Employee {
         this.barangay = barangay;
         this.city = city;
         this.zipCode = zipCode;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public Long getEmployeeId() {
@@ -153,9 +139,8 @@ public class Employee {
 
     @Override
     public String toString() {
-        return "Employee{" +
-                "id=" + id +
-                ", employeeId=" + employeeId +
+        return "EmployeeDto{" +
+                "employeeId=" + employeeId +
                 ", birthDay=" + birthDay +
                 ", position=" + position +
                 ", firstName='" + firstName + '\'' +

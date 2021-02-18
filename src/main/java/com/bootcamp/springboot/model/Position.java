@@ -6,7 +6,6 @@ public enum Position {
     RECEPTIONIST("Receptionist"),
     OFFICE_MANAGER("Office Manager"),
     OPERATIONS_MANAGER("Operations Manager");
-
     private String value;
 
     Position(String value) {

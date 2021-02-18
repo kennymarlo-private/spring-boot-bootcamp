@@ -1,0 +1,224 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Bootstrap Toggle</title>
+
+    <link th:rel="stylesheet" href="https://cdn.datatables.net/1.10.23/css/jquery.dataTables.min.css"/>
+    <link th:rel="stylesheet" th:href="@{webjars/bootstrap/4.0.0-2/css/bootstrap.min.css} "/>
+
+    <style>
+        html {
+            font-family: serif;
+            font-size: small;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Navigation -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark static-top">
+    <div class="container">
+        <a class="navbar-brand" href="/">Thymeleaf - Bootstrap</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"
+                aria-controls="navbarResponsive"
+                aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/">Home
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/employee">Employee List</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="/user">User List</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/logout">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="mt-5 mb-5">
+            <table id="example" class="table table-bordered" style="width: 100%">
+                <thead class="thead-dark">
+                <tr>
+                    <th style="display: none">ID</th>
+                    <th>Username</th>
+                    <th>Active</th>
+                    <th>Edit / Delete</th>
+                </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="staticBackdrop"  data-bs-keyboard="false" tabindex="-1"
+     aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel">Edit User Details</h5>
+            </div>
+
+            <form method="post" action="/user" th:object="${user}">
+                <div class="modal-body">
+                    <input type="hidden" id="id" th:field="*{id}">
+
+                        <div class="form-group">
+                            <label for="username">Username</label>
+                            <input type="text" class="form-control" id="username" th:field="*{username}">
+                        </div>
+                    <div class="form-group">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="active" th:field="*{active}">
+                            <label class="form-check-label" for="active">
+                                Active
+                            </label>
+                        </div>
+                    </div>
+                    <input type="hidden" id="password" th:field="*{password}">
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal()">Close</button>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="newUserModal"  data-bs-keyboard="false" tabindex="-1"
+     aria-labelledby="newUserLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="newUserLabel">Add New User</h5>
+            </div>
+
+            <form method="post" action="/user" th:object="${user}">
+                <div class="modal-body">
+                    <input type="hidden" id="id" th:field="*{id}">
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="username">First Name</label>
+                            <input type="text" class="form-control" id="username" th:field="*{username}">
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="password">Password</label>
+                            <input type="text" class="form-control" id="password" th:field="*{password}">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="active" th:field="*{active}">
+                            <label class="form-check-label" for="active">
+                                Active
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="closeNewUserModal()">Close</button>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+<script th:src="@{/webjars/popper.js/umd/popper.min.js}"></script>
+<script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+<script src="https://cdn.datatables.net/1.10.23/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.6.5/js/dataTables.buttons.min.js"></script>
+
+<script>
+
+    const myModal = new bootstrap.Modal(document.getElementById('staticBackdrop'));
+    const userModal = new bootstrap.Modal(document.getElementById('newUserModal'));
+
+    $('#example').DataTable({
+        ajax: {
+            url: '/user/rest',
+            dataSrc: ''
+        },
+        dom: 'Bfrtip',
+        buttons: [
+            {
+                text: 'Add New User',
+                className: 'btn btn-primary',
+                action: function ( e, dt, node, config ) {
+                    $('#newUserModal').on('hidden.bs.modal', function (e) {
+                        $(this)
+                            .find("input,textarea,select")
+                            .val('')
+                            .end()
+                            .find("input[type=checkbox], input[type=radio]")
+                            .prop("checked", "")
+                            .end();
+                    })
+                    userModal.show();
+                }
+            }
+        ],
+        columns: [
+            {data: "id", visible: false},
+            {data: "username", width: 200},
+            {data: "active", width: 100},
+            {
+                data: null,
+                className: "center",
+                width: 100,
+                render: function (data, type, row, meta) {
+                    return '<a href="#" class="editor_edit" onclick="editEvent(this)">Edit</a>'
+                }
+            }
+        ]
+    });
+
+    function editEvent(el) {
+        const dataRow = $('#example').DataTable().row($(el).closest('tr')).data();
+
+        $('#staticBackdrop').on('hidden.bs.modal', function (e) {
+            $(this)
+                .find("input,textarea,select")
+                .val('')
+                .end()
+                .find("input[type=checkbox], input[type=radio]")
+                .prop("checked", "")
+                .end();
+        })
+
+        $('#staticBackdrop #id').val(dataRow.id);
+        $('#staticBackdrop #username').val(dataRow.username);
+        $('#staticBackdrop #password').val(dataRow.password);
+        $('#staticBackdrop #active').val(dataRow.active);
+
+        myModal.show();
+    }
+
+    function closeModal() {
+        myModal.hide();
+    }
+
+    function closeNewUserModal() {
+        userModal.hide();
+    }
+
+
+</script>
+
+</body>
+</html>

@@ -6,6 +6,13 @@
 
     <link th:rel="stylesheet" href="https://cdn.datatables.net/1.10.23/css/jquery.dataTables.min.css"/>
     <link th:rel="stylesheet" th:href="@{webjars/bootstrap/4.0.0-2/css/bootstrap.min.css} "/>
+
+    <style>
+        html {
+            font-family: serif;
+            font-size: small;
+        }
+    </style>
 </head>
 <body>
 
@@ -27,6 +34,12 @@
                 <li class="nav-item active">
                     <a class="nav-link" href="/employee">Employee List</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/user">User List</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/logout">Logout</a>
+                </li>
             </ul>
         </div>
     </div>
@@ -37,6 +50,7 @@
             <table id="example" class="table table-bordered table-responsive" style="width: 100%">
                 <thead class="thead-dark">
                 <tr>
+                    <th style="display: none">ID</th>
                     <th>First Name</th>
                     <th>Middle Name</th>
                     <th>Last Name</th>
@@ -47,9 +61,82 @@
                     <th>Barangay</th>
                     <th>City</th>
                     <th>Zip Code</th>
+                    <th>Edit / Delete</th>
                 </tr>
                 </thead>
             </table>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="staticBackdrop"  data-bs-keyboard="false" tabindex="-1"
+     aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel">Edit Employee Details</h5>
+            </div>
+
+            <form method="post" action="/" th:object="${employee}">
+                <div class="modal-body">
+                    <input type="hidden" id="id" th:field="*{id}">
+                    <div class="form-row">
+                        <div class="form-group col-md-4">
+                            <label for="firstName">First Name</label>
+                            <input type="text" class="form-control" id="firstName" th:field="*{firstName}">
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label for="middleName">Middle Name</label>
+                            <input type="text" class="form-control" id="middleName" th:field="*{middleName}">
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label for="lastName">Last Name</label>
+                            <input type="text" class="form-control" id="lastName" th:field="*{lastName}">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-4">
+                            <label for="employeeId">Employee ID</label>
+                            <input type="text" class="form-control" id="employeeId" th:field="*{employeeId}">
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label for="position">Position</label>
+                            <select id="position" class="form-control" th:field="*{position}">
+                                <option th:each="position : ${T(com.bootcamp.springboot.model.Position).values()}"
+                                        th:value="${position}" th:text="${position.value}"></option>
+                            </select>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label for="birthday">Birthday</label>
+                            <input type="date" class="form-control" id="birthday" th:field="*{birthDay}">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="street">Street</label>
+                        <input type="text" class="form-control" id="street" th:field="*{street}">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-4">
+                            <label for="barangay">Barangay</label>
+                            <input type="text" class="form-control" id="barangay" th:field="*{barangay}">
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label for="city">City</label>
+                            <input type="text" class="form-control" id="city" th:field="*{city}">
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label for="zipCode">Zip Code</label>
+                            <input type="number" class="form-control" id="zipCode" th:field="*{zipCode}">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal()">Close</button>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
@@ -61,25 +148,73 @@
 
 <script>
 
-    $('#example').DataTable( {
+    const myModal = new bootstrap.Modal(document.getElementById('staticBackdrop'));
+
+    $('#example').DataTable({
         ajax: {
             url: '/employee/rest',
             dataSrc: ''
         },
         columns: [
-            { data: "firstName" },
-            { data: "middleName" },
-            { data: "lastName" },
-            { data: "employeeId" },
-            { data: "birthDay" },
-            { data: "position" },
-            { data: "street" },
-            { data: "barangay" },
-            { data: "city" },
-            { data: "zipCode" }
+            {data: "id", visible: false},
+            {data: "firstName"},
+            {data: "middleName"},
+            {data: "lastName"},
+            {data: "employeeId"},
+            {data: "birthDay"},
+            {
+                data: "position",
+                className: "center",
+                render: function(data, type, row, meta) {
+                    return data.replace(/_/g, ' ');
+                }
+            },
+            {data: "street"},
+            {data: "barangay"},
+            {data: "city"},
+            {data: "zipCode"},
+            {
+                data: null,
+                className: "center",
+                render: function (data, type, row, meta) {
+                    return '<a href="#" class="editor_edit" onclick="editEvent(this)">Edit</a> / <a href="#" onclick="deleteEvent(this)" class="editor_remove">Delete</a>'
+                }
+            }
         ]
-    } );
+    });
 
+    function editEvent(el) {
+        const dataRow = $('#example').DataTable().row($(el).closest('tr')).data();
+        console.log(dataRow);
+        $('#staticBackdrop #id').val(dataRow.id);
+        $('#staticBackdrop #firstName').val(dataRow.firstName);
+        $('#staticBackdrop #middleName').val(dataRow.middleName);
+        $('#staticBackdrop #lastName').val(dataRow.lastName);
+        $('#staticBackdrop #employeeId').val(dataRow.employeeId);
+        $('#staticBackdrop #position').val(dataRow.position);
+        $('#staticBackdrop #birthday').val(dataRow.birthDay);
+        $('#staticBackdrop #street').val(dataRow.street);
+        $('#staticBackdrop #barangay').val(dataRow.barangay);
+        $('#staticBackdrop #city').val(dataRow.city);
+        $('#staticBackdrop #zipCode').val(dataRow.zipCode);
+
+        myModal.show();
+    }
+
+    function deleteEvent(el) {
+        const dataRow = $('#example').DataTable().row($(el).closest('tr')).data();
+        $.ajax({
+            url: '/employee/delete/' + dataRow.id,
+            success: function () {
+                $('#example').DataTable().ajax.reload();
+            }
+        });
+    }
+
+    function closeModal() {
+        console.log("clicked");
+        myModal.hide();
+    }
 
 
 </script>
